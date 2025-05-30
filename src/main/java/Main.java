@@ -44,64 +44,70 @@ public class Main {
         System.out.println("===Registro Estudiante===");
         System.out.print("Ingrese el id del estudiante: ");
         String idEst = kb.nextLine();
-        System.out.print("Ingrese el nombre del estudiante: ");
-        String nmEst = kb.nextLine();
-        System.out.println("\nEstudiante registrado con exito!\n");
+        if (!estudiantes.containsKey(idEst)) {//Sé verífica que al registrar el ID no exista en otro estudiante
+            System.out.print("Ingrese el nombre del estudiante: ");
+            String nmEst = kb.nextLine();
+            System.out.println("Estudiante registrado con exito!\n");
 
-        Estudiante est = new Estudiante();//Se crea el estudiante
-        est.registrarEstudiante(idEst, nmEst);//Se inserta su informacion
-        estudiantes.put(est.getIdEstudiante(), est);//Se identifica y se guarda en el Map
+            Estudiante est = new Estudiante();//Se crea el estudiante
+            est.registrarEstudiante(idEst, nmEst);//Se inserta su informacion
+            estudiantes.put(est.getIdEstudiante(), est);//Se identifica y se guarda en el Map
 
-        System.out.println("===Registro Notas===");
-        //Componente
-        System.out.print("Componente: ");
-        String nmComp = scannerString(kb);
-        System.out.print("Profesor del componente: ");
-        String prfComp = scannerString(kb);
-        Componente comp = new Componente();//Se crea el componente
-        comp.registrarInfoComponente(nmComp, prfComp);//Se registra la informacion del componente
+            System.out.print("===Registro Notas===\n");
+            //Componente
+            System.out.print("Componente: ");
+            String nmComp = scannerString(kb);
+            System.out.print("Profesor del componente: ");
+            String prfComp = scannerString(kb);
+            Componente comp = new Componente();//Se crea el componente
+            comp.registrarInfoComponente(nmComp, prfComp);//Se registra la informacion del componente
 
-        //Notas
-        String salida;//Opcion para dejar de guardar notas
-        int i = 1;//Id para las notas
-        do {
+            //Notas
+            String salida;//Opcion para dejar de guardar notas
+            int i = 1;//Id para las notas
             do {
-                System.out.printf("Nota %s: ", i);
-                double nt = strToDouble(kb);//convierte String en double o un numero negativo en caso de error
-                if (nt > 0) {
-                    System.out.printf("Porcentaje de la nota %s: ", i);
-                    double prcNt = strToDouble(kb);
-                    if (prcNt > 0) {
-                        Nota nota = new Nota(nt, prcNt, comp);
-                        est.agregarNotas(i, nota);
-                        System.out.printf("Nota %s Registrada!\n", i);
-                        i++;
+                do {
+                    System.out.printf("Nota %s: ", i);
+                    double nt = strToDouble(kb);//convierte String en double o un numero negativo en caso de error
+                    if (nt > 0) {
+                        System.out.printf("Porcentaje de la nota %s: ", i);
+                        double prcNt = strToDouble(kb);
+                        if (prcNt > 0) {
+                            Nota nota = new Nota(nt, prcNt, comp);
+                            est.agregarNotas(i, nota);
+                            System.out.printf("Nota %s Registrada!\n", i);
+                            i++;
+                        } else {
+                            System.out.println("Valor ingresado invalido");
+                        }
                     } else {
-                        System.out.println("Valor ingresado invalido");
+                        System.out.println("Valor ingresado incorrecto");
                     }
-                } else {
-                    System.out.println("Valor ingresado incorrecto");
+                    System.out.println("Desea ingresar otra nota (S/N)");
+                    salida = kb.nextLine();
+                } while (salida.equalsIgnoreCase("s"));
+                //Sé verífica que la suma de los porcentajes de las notas ingresadas no superen el 100%
+                if (porcentajeMxCn(est) == false) {//Solo permite guardar cuando los porcentajes de las notas no superan el 100%
+                    System.out.println("Valores de porcentajes por encima de 100%");
+                    est.borrarNotas();//Si las notas superan el 100% se borran todas la notas ingresadas
+                    i = 1;//Se reinicia el ID para volver a registrar las notas
                 }
-                System.out.println("Desea ingresar otra nota (S/N)");
-                salida = kb.nextLine();
-            } while (salida.equalsIgnoreCase("s"));
-            //Sé verífica que la suma de los porcentajes de las notas ingresadas no superen el 100%
-            if (porcentajeMxCn(est) == false) {//Solo permite guardar cuando los porcentajes de las notas no superan el 100%
-                System.out.println("Valores de porcentajes por encima de 100%");
-                est.borrarNotas();//Si las notas superan el 100% se borran todas la notas ingresadas
-                i = 1;//Se reinicia el ID para volver a registrar las notas
-            }
-        } while (porcentajeMxCn(est) == false);//El registro de las notas solo permite salir cuando no se supera el 100%
+            } while (porcentajeMxCn(est) == false);//El registro de las notas solo permite salir cuando no se supera el 100%
+        } else {
+            System.out.println("\nEstudiante con ID ("+idEst+") ya registrado\n");
+        }
     }
-
 
     private static void opcionListarEstudiantes(Map<String, Estudiante> estudiantes) {
         System.out.println("===Lista de Estudiantes===");
         if (estudiantes.isEmpty()) {//Sé verífica que exista registro del algún estudiante
             System.out.println("No hay estudiantes registrados\n");
         } else {
+            System.out.println("ID  | NOMBRE   |");
+            System.out.println("---------------------");
             for (Estudiante e : estudiantes.values()) {
-                System.out.print(e.toString());//Imprime todos los estudiantes registrados
+                System.out.print(e.infoEstudiante());//Imprime todos los estudiantes registrados
+                System.out.println("\n---------------------");
             }
         }
     }

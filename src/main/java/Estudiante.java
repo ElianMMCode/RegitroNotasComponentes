@@ -43,6 +43,9 @@ public class Estudiante {
         return notaFinal;
     }
 
+    public String infoEstudiante(){
+        return getIdEstudiante()+"  |  "+getNombreEstudiante()+" |";
+    }
     //Se sobreescribe esta clase para dar formato propio a la impression de un objeto de tipo Estudiante
     @Override
     public String toString() {
@@ -86,7 +89,7 @@ public class Estudiante {
         for (Nota n : notas.values()) {
             sumNotas += n.getVrNotaPorcentaje();
         }
-        setNotaFinal(sumNotas / cantNotas);
+        setNotaFinal(sumNotas);
         return getNotaFinal();
     }
 
