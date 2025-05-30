@@ -5,7 +5,7 @@ public class Estudiante {
 
     private String idEstudiante;
     private String nombreEstudiante;
-    private final Map<Integer, Nota> notas = new TreeMap<>();
+    private final Map<Integer, Nota> notas = new TreeMap<>();//Map para guardar las notas
     private double notaFinal;
     private double cantNotas;
 
@@ -43,11 +43,12 @@ public class Estudiante {
         return notaFinal;
     }
 
+    //Se sobreescribe esta clase para dar formato propio a la impression de un objeto de tipo Estudiante
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();//Permite ir editando cadenas de texto
         sb.append("===Estudiante===\n").append("Id: ")
-                .append(idEstudiante)
+                .append(idEstudiante)//Con él .append se agregan fragmentos de texto a la impresion
                 .append("\nNombre: ")
                 .append(nombreEstudiante)
                 .append("\n===Notas===")
@@ -55,9 +56,9 @@ public class Estudiante {
                 .append(notas.get(1).getComponente())
                 .append("\nID | NOTA   | PORCENTAJE | NOTA PORCENTAJE |\n");
 
-        notas.forEach((numeroNota, nota) -> {
+        notas.forEach((numeroNota, nota) -> {//se recorre el map para dar formato a cada nota
             sb.append(numeroNota).append("    | ")
-                    .append(String.format("%.2f ", nota.getVrNota()))
+                    .append(String.format("%.2f ", nota.getVrNota()))//se cambia el formato de los doubles
                     .append("    | ")
                     .append(String.format("%.0f%%", nota.getPorcentaje()))
                     .append("    | ")
@@ -78,8 +79,10 @@ public class Estudiante {
         return cantNotas;
     }
 
+
     public double calcularNotaFinal() {
         double sumNotas = 0;
+        //Se recorre el map sumando las notas
         for (Nota n : notas.values()) {
             sumNotas += n.getVrNotaPorcentaje();
         }
@@ -88,6 +91,6 @@ public class Estudiante {
     }
 
     public void borrarNotas() {
-        notas.clear();
+        notas.clear();//limpia el map de notas del estudiante
     }
 }
