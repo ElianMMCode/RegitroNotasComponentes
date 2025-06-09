@@ -1,11 +1,15 @@
+import javax.swing.JOptionPane;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Main {
 
+    //Correciones
+    //Definir al docente como usuario y sus respectivas funcionalidades
+    //Un rol estudiante que solo pueda mirar sus notas
+    //Definir una clase interface para ser invocada por el main
+
     public static void main(String[] args) {
-        Scanner kb = new Scanner(System.in);
         //Se inicia la opcion en -1 para en caso de no leer nada salte a la opcion default
         int opcion = -1;
         //Map donde se guardaran los estudiantes
@@ -13,22 +17,27 @@ public class Main {
 
         //Con este while se permite que después de salir de una opcion se repita el switch hasta escoger la opcion 0
         while (opcion != 0) {
-            System.out.println("===Registro Notas Estudiantes====");
-            System.out.println("1. Registrar estudiante");
-            System.out.println("2. Listar estudiantes");
-            System.out.println("3. Ver información de estudiante");
-            System.out.println("0. Salir");
-            opcion = strToInteger(kb);
 
+
+            String op = JOptionPane.showInputDialog(null,
+                    """
+                            1. Registrar estudiante\
+                            
+                            2. Listar estudiantes\
+                            P
+                            3. Ver información de estudiante\
+                            
+                            0. Salir""","Registro Notas Estudiantes", JOptionPane.PLAIN_MESSAGE);
+            opcion = strToInteger(op);
             switch (opcion) {
                 case 1:
-                    opcionRegistrarEstudiante(kb, estudiantes);//Registro de la info del estudiante, sus notas y el componente asociado a estas
+                    opcionRegistrarEstudiante(estudiantes);//Registro de la info del estudiante, sus notas y el componente asociado a estas
                     break;
                 case 2:
                     opcionListarEstudiantes(estudiantes);//Lista de todos los estudiantes registrados
                     break;
                 case 3:
-                    opcionVerInformacionEstudiantes(kb, estudiantes);//Ver la información detallada de uno de los estudiantes registrados
+                    opcionVerInformacionEstudiantes(estudiantes);//Ver la información detallada de uno de los estudiantes registrados
                     break;
                 case 0:
                     opcionSalir();
@@ -37,141 +46,131 @@ public class Main {
                     opcionOpcionInvalida();
             }
         }
-        kb.close();
     }
 
-    private static void opcionRegistrarEstudiante(Scanner kb, Map<String, Estudiante> estudiantes) {
-        System.out.println("===Registro Estudiante===");
-        System.out.print("Ingrese el id del estudiante: ");
-        String idEst = kb.nextLine();
+    private static void opcionRegistrarEstudiante(Map<String, Estudiante> estudiantes) {
+        String idEst = JOptionPane.showInputDialog(null,
+                "Ingrese el id del estudiante: ","Registro Estudiantes", JOptionPane.PLAIN_MESSAGE);
         if (!estudiantes.containsKey(idEst)) {//Sé verífica que al registrar el ID no exista en otro estudiante
-            System.out.print("Ingrese el nombre del estudiante: ");
-            String nmEst = kb.nextLine();
-            System.out.println("Estudiante registrado con exito!\n");
-
+            String nmEst = JOptionPane.showInputDialog("Ingrese el nombre del estudiante: ");
+            JOptionPane.showMessageDialog(null, "Estudiante registrado con exito!");
             Estudiante est = new Estudiante();//Se crea el estudiante
             est.registrarEstudiante(idEst, nmEst);//Se inserta su informacion
             estudiantes.put(est.getIdEstudiante(), est);//Se identifica y se guarda en el Map
 
-            System.out.print("===Registro Notas===\n");
-            //Componente
-            System.out.print("Componente: ");
-            String nmComp = scannerString(kb);
-            System.out.print("Profesor del componente: ");
-            String prfComp = scannerString(kb);
+
+            String nmComp = JOptionPane.showInputDialog("Registro Componente");
+            String prfComp = JOptionPane.showInputDialog("Profesor del componente");
             Componente comp = new Componente();//Se crea el componente
             comp.registrarInfoComponente(nmComp, prfComp);//Se registra la informacion del componente
 
             //Notas
-            String salida;//Opcion para dejar de guardar notas
+            int salida;//Opcion para dejar de guardar notas
             int i = 1;//Id para las notas
             do {
                 do {
-                    System.out.printf("Nota %s: ", i);
-                    double nt = strToDouble(kb);//convierte String en double o un numero negativo en caso de error
+                    double nt = strToDouble(JOptionPane.showInputDialog("Nota"+ i));//convierte String en double o un numero negativo en caso de error
                     if (nt > 0) {
-                        System.out.printf("Porcentaje de la nota %s: ", i);
-                        double prcNt = strToDouble(kb);
+                        double prcNt = strToDouble(JOptionPane.showInputDialog("Porcentaje de la nota "+ i));
                         if (prcNt > 0) {
                             Nota nota = new Nota(nt, prcNt, comp);
                             est.agregarNotas(i, nota);
-                            System.out.printf("Nota %s Registrada!\n", i);
+                            JOptionPane.showMessageDialog(null, "Nota Registrada!", " ", JOptionPane.ERROR_MESSAGE);
                             i++;
                         } else {
-                            System.out.println("Valor ingresado invalido");
+                            JOptionPane.showMessageDialog(null, "Valor ingesado invalido", "Exito!", JOptionPane.PLAIN_MESSAGE);
                         }
                     } else {
-                        System.out.println("Valor ingresado incorrecto");
+                        JOptionPane.showMessageDialog(null, "Valor ingresado incorrecto", "Error!", JOptionPane.PLAIN_MESSAGE);
                     }
-                    System.out.println("Desea ingresar otra nota (S/N)");
-                    salida = kb.nextLine();
-                } while (salida.equalsIgnoreCase("s"));
-                //Sé verífica que la suma de los porcentajes de las notas ingresadas no superen el 100%
+                    salida = JOptionPane.showConfirmDialog(null, "Desea ingresar otra nota", "Error!", JOptionPane.YES_NO_OPTION);
+                } while (salida == 0);
                 if (porcentajeMxCn(est) == false) {//Solo permite guardar cuando los porcentajes de las notas no superan el 100%
-                    System.out.println("Valores de porcentajes por encima de 100%");
+                    JOptionPane.showMessageDialog(null, "Valores de porcentajes por encima de 100%", "Error!", JOptionPane.PLAIN_MESSAGE);
                     est.borrarNotas();//Si las notas superan el 100% se borran todas la notas ingresadas
                     i = 1;//Se reinicia el ID para volver a registrar las notas
                 }
             } while (porcentajeMxCn(est) == false);//El registro de las notas solo permite salir cuando no se supera el 100%
         } else {
-            System.out.println("\nEstudiante con ID ("+idEst+") ya registrado\n");
+            JOptionPane.showMessageDialog(null, "Estudiante con ID (" + idEst + ") ya registrado");
         }
     }
 
     private static void opcionListarEstudiantes(Map<String, Estudiante> estudiantes) {
-        System.out.println("===Lista de Estudiantes===");
         if (estudiantes.isEmpty()) {//Sé verífica que exista registro del algún estudiante
-            System.out.println("No hay estudiantes registrados\n");
+            JOptionPane.showMessageDialog(null, "No hay estudiantes registrados", "Lista de Estudiantes", JOptionPane.PLAIN_MESSAGE);
         } else {
-            System.out.println("ID  | NOMBRE   |");
-            System.out.println("---------------------");
+            StringBuilder sb = new StringBuilder();
             for (Estudiante e : estudiantes.values()) {
-                System.out.print(e.infoEstudiante());//Imprime todos los estudiantes registrados
-                System.out.println("\n---------------------");
+                sb.append(e.toString());
             }
+            String textoJustificado = sb.toString();
+            JOptionPane.showMessageDialog(null,
+                    "ID  | NOMBRE   |\n" +
+                            "-----------------------\n" +
+                            textoJustificado, "Lista estudiantes", JOptionPane.PLAIN_MESSAGE);
+
         }
     }
 
-    private static void opcionVerInformacionEstudiantes(Scanner kb, Map<String, Estudiante> estudiantes) {
+    private static void opcionVerInformacionEstudiantes(Map<String, Estudiante> estudiantes) {
         int opcion2 = -1;
         while (opcion2 != 0) {
-            System.out.println("===Informacion Estudiantes===");
-            System.out.println("1. Buscar estudiante por id");
-            System.out.println("2. Buscar estudiante por nombre");
-            System.out.println("0. Volver");
-            opcion2 = strToInteger(kb);
+            opcion2 = strToInteger(JOptionPane.showInputDialog(null, """
+                            1. Buscar estudiante por id\
+                            
+                            2. Buscar estudiante por nombre\
+                            
+                            0. Volver""",
+                    "Informacion Estudiantes"));
             switch (opcion2) {
                 case 1:
-                    buscarPorId(kb, estudiantes);
+                    buscarPorId(estudiantes);
                     break;
                 case 2:
-                    buscarPorNombre(kb, estudiantes);
+                    buscarPorNombre(estudiantes);
                     break;
                 case 0:
-                    // volver
-                    System.out.println("<--");//Opcion para volver al menu de inicio
                     break;
                 default:
-                    System.out.println("Opcion invalida. Intenta de nuevo");
+                    JOptionPane.showMessageDialog(null, "Opcion invalida. Intenta de nuevo", "Error!", JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
 
-    private static void buscarPorId(Scanner kb, Map<String, Estudiante> estudiantes) {
-        System.out.print("Ingrese el id del estudiante: ");
-        String bsIdEst = kb.nextLine();
+    private static void buscarPorId(Map<String, Estudiante> estudiantes) {
+        String bsIdEst = JOptionPane.showInputDialog(null,"Ingrese el id del estudiante: ");
         if (estudiantes.containsKey(bsIdEst)) {//Se busca por ID al estudiante, si no encuentra devuelve false
             Estudiante bsEst = estudiantes.get(bsIdEst);//Sí lo encuentra sus atributos sé asociando a un objeto
-            System.out.println(bsEst.toString());       //para luego imprimirlos
+            JOptionPane.showMessageDialog(null,bsEst.toString(), "Info estudiante", JOptionPane.PLAIN_MESSAGE);
         } else {
-            System.out.println("Id no asociado a un estudiante");
+            JOptionPane.showMessageDialog(null,"Id no asociado a un estudiante","Error!", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
-    private static void buscarPorNombre(Scanner kb, Map<String, Estudiante> estudiantes) {
-        System.out.println("Ingrese el nombre del estudiante: ");
-        String bsNmEst = kb.nextLine();
+    private static void buscarPorNombre(Map<String, Estudiante> estudiantes) {
+        String bsNmEst = JOptionPane.showInputDialog("Ingrese el nombre del estudiante: ");
         for (Estudiante e : estudiantes.values())//Se recorre el map buscando un estudiante que coincida el nombre
             if (e.getNombreEstudiante().equalsIgnoreCase(bsNmEst)) { //ignorando mayúsculas y minuscules
-                System.out.println(e); //Al encntrar una coincidencia imprime
+                JOptionPane.showMessageDialog(null,e.toString(), "Info estudiante", JOptionPane.PLAIN_MESSAGE);
             } else {
-                System.out.println("No existe un estudiante con ese nombre");
+                JOptionPane.showMessageDialog(null, "No existe un estudiante con ese nombre", "Error!", JOptionPane.PLAIN_MESSAGE);
             }
     }
 
     private static void opcionSalir() {
-        System.out.println("====FIN DEL PROGRAMA====");
+        JOptionPane.showMessageDialog(null, "Saliendo");
     }
 
     private static void opcionOpcionInvalida() {
-        System.out.println("Opcion invalida. Intenta de nuevo");
+        JOptionPane.showMessageDialog(null, "Opcion invalida",  "Error!", JOptionPane.PLAIN_MESSAGE);
     }
 
     //Lee un string y retorna un dooble - controla errores por lectura
-    public static Double strToDouble(Scanner kb) {
+    public static Double strToDouble(String string) {
         double d;
         try {
-            d = Double.parseDouble(kb.nextLine());
+            d = Double.parseDouble(string);
         } catch (NumberFormatException e) {//Se controla posible error de Scanner
             d = -1.0;//Si detecta error devuelve un negativo
         }
@@ -179,21 +178,14 @@ public class Main {
     }
 
     //Lee un string y devuelve un integer-controla errores por lectura
-    public static Integer strToInteger(Scanner kb) {
+    public static Integer strToInteger(String string) {
         int i;
         try {
-            i = Integer.parseInt(kb.nextLine());
+            i = Integer.parseInt(string);
         } catch (NumberFormatException e) {
             i = -1;
         }
         return i;
-    }
-
-    //Scaneo de strings
-    public static String scannerString(Scanner kb) {
-        String s;
-        s = kb.nextLine();
-        return s;
     }
 
     //Verifica que la suma de porcentajes de las notas no pase el 100%

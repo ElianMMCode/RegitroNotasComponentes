@@ -9,7 +9,6 @@ public class Estudiante {
     private double notaFinal;
     private double cantNotas;
 
-
     public Estudiante() {
     }
 
