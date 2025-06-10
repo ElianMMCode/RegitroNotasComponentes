@@ -9,10 +9,10 @@ import java.util.Map;
 public class InterfazUsuario {
 
     public void mostrarMenuUsuario() {
-        var opcion = -1;
+        var opcion = -2;
         Map<String, Profesor> profesores = new java.util.HashMap<>();
 
-        while (opcion != 0) {
+        while (opcion != 0 && opcion != -1) {
             String op = JOptionPane.showInputDialog(null,
                     """
                             1. Profesor
@@ -24,8 +24,7 @@ public class InterfazUsuario {
             switch (opcion) {
                 case 1 -> InterfazProfesor.mostrarMenuProfesor(profesores);
                 case 2 -> InterfazEstudiante.mostrarMenuEstudiante(profesores);
-                case 0 -> {
-                }
+                case 0, -1 -> {}
                 default -> InterfazOpciones.opcionInvalida();
             }
         }

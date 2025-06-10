@@ -147,16 +147,16 @@ public class InterfazOpciones {
     }
 
     public static void opcionVerInformacionEstudiantes(Map<String, Estudiante> estudiantes) {
-        int opcion2 = -1;
-        while (opcion2 != 0) {
-            opcion2 = strToInteger(JOptionPane.showInputDialog(null, """
+        int opcion = -2;
+        while (opcion != 0 && opcion != -1) {
+            opcion = strToInteger(JOptionPane.showInputDialog(null, """
                             1. Buscar estudiante por ID
                             2. Buscar estudiante por nombre
                             0. Volver"""));
-            switch (opcion2) {
+            switch (opcion) {
                 case 1 -> buscarPorId(estudiantes);
                 case 2 -> buscarPorNombre(estudiantes);
-                case 0 -> { }
+                case 0, -1 -> {}
                 default -> opcionInvalida();
             }
         }

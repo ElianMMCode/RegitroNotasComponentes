@@ -10,21 +10,20 @@ import java.util.Map;
 public class InterfazProfesor {
 
     public static void mostrarMenuProfesor(Map<String, Profesor> profesores) {
-        int opcion = -1;
-        while (opcion != 0) {
+        int opcion = -2;
+        while (opcion != 0 && opcion != -1) {
             var op = JOptionPane.showInputDialog(null,
                     """
                             1. Registro Profesor
                             
                             2. Iniciar Sesión
                             
-                            0. Salir""", "Usuario", JOptionPane.PLAIN_MESSAGE);
+                            0. Volver""", "Usuario", JOptionPane.PLAIN_MESSAGE);
             opcion = InterfazOpciones.strToInteger(op);
             switch (opcion) {
                 case 1 -> InterfazOpciones.opcionRegistrarProfesor(profesores);
                 case 2 -> validarProfesor(profesores);
-                case 0 -> {
-                }
+                case 0,-1 -> {}
                 default -> InterfazOpciones.opcionInvalida();
             }
         }
@@ -46,8 +45,8 @@ public class InterfazProfesor {
     }
 
     public static void mostrarMenuEstudiantes(Map<String, Estudiante> estudiantes) {
-        int opcion = -1;
-        while (opcion != 0) {
+        int opcion = -2;
+        while (opcion != 0 && opcion != -1) {
             String op = JOptionPane.showInputDialog(null,
                     """
                             1. Registrar estudiante
@@ -62,16 +61,15 @@ public class InterfazProfesor {
                 case 1 -> InterfazOpciones.opcionRegistrarEstudiante(estudiantes);
                 case 2 -> InterfazOpciones.opcionListarEstudiantes(estudiantes);
                 case 3 -> InterfazOpciones.opcionVerInformacionEstudiantes(estudiantes);
-                case 0 -> {
-                }
+                case 0, -1 -> {}
                 default -> InterfazOpciones.opcionInvalida();
             }
         }
     }
 
     private static void mostrarMenuComponentes(Profesor p) {
-        int opcion = -1;
-        while (opcion != 0) {
+        int opcion = -2;
+        while (opcion != 0 &&  opcion != -1) {
             String op = JOptionPane.showInputDialog(null,
                     """
                             1. Registro Componente
@@ -89,8 +87,7 @@ public class InterfazProfesor {
                 case 2 -> InterfazOpciones.opcionListarComponentes(p);
                 case 3 -> InterfazOpciones.opcionBuscarComponente(p);
                 case 4 -> InterfazOpciones.opcionRegistrarEstComp(p);
-                case 0 -> {
-                }
+                case 0 , -1 -> {}
                 default -> InterfazOpciones.opcionInvalida();
             }
         }
