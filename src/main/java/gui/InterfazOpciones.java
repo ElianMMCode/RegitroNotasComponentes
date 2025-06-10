@@ -57,7 +57,12 @@ public class InterfazOpciones {
         boolean encontrado = false;
         for (Componente c : p.getComponentes()) {
             if (c.getNombreComponente().equalsIgnoreCase(nmComp)) {
-                JOptionPane.showMessageDialog(null, "Componente encontrado:\n" + c);
+                StringBuilder sb = new StringBuilder();
+                for (Estudiante e : c.getListEstudiantes().values()){
+                    sb.append(e);
+                }
+                String textoJustificado = sb.toString();
+                JOptionPane.showMessageDialog(null, c+textoJustificado, "Componente", JOptionPane.PLAIN_MESSAGE);
                 encontrado = true;
                 break;
             }
@@ -74,7 +79,7 @@ public class InterfazOpciones {
         boolean encontrado = false;
         for (Componente c : p.getComponentes()) {
             if (c.getNombreComponente().equalsIgnoreCase(comp)) {
-                InterfazEstudiante.mostrarMenuEstudiantes(c.getListEstudiantes());
+                InterfazProfesor.mostrarMenuEstudiantes(c.getListEstudiantes());
                 encontrado = true;
                 break;
             }

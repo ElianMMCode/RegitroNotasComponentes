@@ -1,3 +1,7 @@
+package Usuarios;
+
+import Componente.Nota;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,10 +46,7 @@ public class Estudiante {
         return notaFinal;
     }
 
-    public String infoEstudiante(){
-        return getIdEstudiante()+"  |  "+getNombreEstudiante()+" |";
-    }
-    //Se sobreescribe esta clase para dar formato propio a la impression de un objeto de tipo Estudiante
+    //Se sobreescribe esta clase para dar formato propio a la impression de un objeto de tipo Usuarios.Estudiante
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();//Permite ir editando cadenas de texto
@@ -54,8 +55,6 @@ public class Estudiante {
                 .append("\nNombre: ")
                 .append(nombreEstudiante)
                 .append("\n===Notas===")
-                .append("\nComponente: ")
-                .append(notas.get(1).getComponente())
                 .append("\nID | NOTA   | PORCENTAJE | NOTA PORCENTAJE |\n");
 
         notas.forEach((numeroNota, nota) -> {//se recorre el map para dar formato a cada nota
